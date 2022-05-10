@@ -1,6 +1,6 @@
 import mysql.connector
 
-
+# Establish a MySQL connection for database management.
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
@@ -11,12 +11,14 @@ mydb = mysql.connector.connect(
 myCursor = mydb.cursor()
 
 
+# Retrieve account ID for account management.
 def get_id(firstname, lastname, account):
     myCursor.execute(f"SELECT id from accounts WHERE firstName = '{firstname}' AND lastName = '{lastname}' "
                      f"AND type = '{account}'")
     return myCursor.fetchall()
 
 
+# Delete/remove a user's bank account.
 def deuces(acct_id):
     del_sql = f"DELETE FROM accounts WHERE id = {acct_id}"
     myCursor.execute(del_sql)
@@ -24,6 +26,7 @@ def deuces(acct_id):
     print("Your account has been removed.")
 
 
+# Retrieve account balance.
 def my_balance(acct_id):
     bal = f"SELECT balance FROM accounts WHERE id = {acct_id}"
     myCursor.execute(bal)
@@ -31,6 +34,7 @@ def my_balance(acct_id):
     return check_balance[0]
 
 
+# Process an account withdrawal.
 def withdraw(acct_id):
     get_money = int(input("How much would you like to withdraw?: "))
     minus_sql = f"UPDATE accounts SET balance = {my_balance(acct_id)} - {get_money} WHERE id ={acct_id}"
@@ -40,6 +44,7 @@ def withdraw(acct_id):
     print(f"And so you now have a balance of ${my_balance(acct_id)}.")
 
 
+# Process an account deposit.
 def deposit(acct_id):
     stack_money = int(input("How much would you like to deposit?: "))
     plus_sql = f"UPDATE accounts SET balance = {my_balance(acct_id)} + {stack_money} WHERE id ={acct_id}"
@@ -48,6 +53,7 @@ def deposit(acct_id):
     print(f"You deposited {stack_money} dollars into your account.")
 
 
+# Prompts for Checking or Savings account access/management.
 def access_account():
     account_name = []
     access_id = []
@@ -118,6 +124,7 @@ def access_account():
             print(f"Invalid option. Please try again.")
 
 
+# Prompts for a user to open a Checking or Savings account.
 def open_account():
     account_type = ""
     acct_type = 'z'
@@ -156,11 +163,14 @@ def open_account():
         print()
 
 
-# ########## Main ##########
+# Main menu for user to choose to open or manage their Checking or Savings account.
+
+# Code for initial database creation
 # myCursor.execute("CREATE DATABASE BankDatabase")
 # acctSQL = "CREATE TABLE accounts (id INT AUTO_INCREMENT PRIMARY KEY, firstName VARCHAR(255),\
 #                   lastName VARCHAR(255), type VARCHAR(255), Balance int)"
 # myCursor.execute(acctSQL)
+
 accounts_sql = "SELECT * FROM accounts"
 myCursor.execute(accounts_sql)
 all_accounts = myCursor.fetchall()
